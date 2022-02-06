@@ -1,9 +1,12 @@
 package com.kgstrivers.payoneer.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,27 +17,46 @@ import com.kgstrivers.payoneer.Models.Applicable;
 import com.kgstrivers.payoneer.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class GatewayAdapter extends RecyclerView.Adapter<GatewayAdapter.MyViewHolder>{
+public class GatewayAdapter extends RecyclerView.Adapter<GatewayAdapter.MyViewHolder> {
 
     Context context;
-    List<Applicable> listapplicable;
+    List<Applicable> listapplicable,emptyapplicable,wholeapplicable;
     public GatewayAdapter(Context contxt,List<Applicable> applicables)
     {
         context = contxt;
         this.listapplicable = applicables;
+        wholeapplicable = listapplicable;
     }
     public void Search(String value)
     {
-        for(int i=0;i<listapplicable.size();i++)
+        emptyapplicable = new ArrayList<>();
+        if(value.length() == 0)
         {
-            if(listapplicable.get(i).getLabel().toLowerCase(Locale.ROOT) == value)
+            Log.d("CHECKING:","Length 0 entered");
+            listapplicable.clear();
+            listapplicable.addAll(wholeapplicable);
+            notifyDataSetChanged();
+        }else
+        {
+            Log.d("CHECKING:",""+listapplicable.size());
+            for(int i=0;i<listapplicable.size();i++)
             {
-                listapplicable.add(listapplicable.get(i));
+                Log.d("CHECKING:",listapplicable.get(i).getCode().toLowerCase());
+                if(listapplicable.get(i).getCode().toLowerCase() == value)
+                {
+                    emptyapplicable.add(listapplicable.get(i));
+
+                }
             }
+            listapplicable.clear();
+            listapplicable=emptyapplicable;
+            notifyDataSetChanged();
         }
+
     }
     @NonNull
     @Override

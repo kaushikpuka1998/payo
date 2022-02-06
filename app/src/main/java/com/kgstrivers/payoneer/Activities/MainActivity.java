@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.renderscript.Sampler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,13 +17,17 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kgstrivers.payoneer.Adapters.GatewayAdapter;
+import com.kgstrivers.payoneer.Interface.AsyncResponse;
+import com.kgstrivers.payoneer.JsonTask;
 import com.kgstrivers.payoneer.Models.Applicable;
 import com.kgstrivers.payoneer.Models.Networks;
+import com.kgstrivers.payoneer.Models.SearchinRecycle;
 import com.kgstrivers.payoneer.Models.WholeModel;
 import com.kgstrivers.payoneer.R;
 import com.kgstrivers.payoneer.privatedetails.Privatedata;
@@ -32,157 +39,91 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     ProgressDialog pd;
     RecyclerView recyclerView;
     GatewayAdapter gatewayAdapter;
     Button enterbutton;
     EditText entervalue;
-    List<Applicable> applicableListglobal1;
+    Privatedata privatedata;
+    List<Applicable> listdata;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        recyclerView = (RecyclerView) findViewById(R.id.recycleview);
-        Privatedata privatedata = new Privatedata();
-        entervalue = findViewById(R.id.Gatewaynameedittext);
-        enterbutton = findViewById(R.id.enter);
-        String val = entervalue.getText().toString();
-        new JsonTask().execute(privatedata.getJsonurl());
-        List<Applicable> listdata = null;
-        entervalue.addTextChangedListener(new TextWatcher() {
+        initialize();
+        createprogressdialog(1000);
+        JsonTask jsonTask =new JsonTask(new AsyncResponse(){
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                gatewayAdapter = new GatewayAdapter(getApplicationContext(),listdata);
-                for(Applicable applicable :applicableListglobal1)
-                {
-                    if(applicable.getLabel()==charSequence.toString())
-                    {
-                        listdata.add(applicable);
-                    }
-                }
-                Toast.makeText(MainActivity.this, "Hello", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-    }
-
-
-
-    private class JsonTask extends AsyncTask<String, String, String> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
-        }
-
-        protected String doInBackground(String... params) {
-
-
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
-
-                    //here u ll get whole response...... :-)
-
-                }
-                String value = buffer.toString();
-                Log.d("Hello 1",value);
-
-                return value;
-
-
-            } catch (MalformedURLException e) {
-                Log.d("Error1:",e.toString());
-            } catch (IOException e) {
-                Log.d("Error2:",e.toString());
-            }finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String value) {
-
-
-
-            List<Applicable> applicables;
-
-            if(value!=null)
-            {
-                Gson gson = new Gson();
-                WholeModel wholeModel = gson.fromJson(value,WholeModel.class);
-                Networks networks = wholeModel.getNetworks();
-                applicables = networks.getApplicable();
-                for(int i=0;i<applicables.size();i++)
-                {
-
-                    Log.d("Value:",applicables.get(i).getLabel());
-                }
-                applicableListglobal1 = applicables;
-                gatewayAdapter = new GatewayAdapter(getApplicationContext(),applicableListglobal1);
-
+            public void processFinish(List<Applicable> output) {
+                listdata.addAll(output);
+                gatewayAdapter = new GatewayAdapter(getApplicationContext(),output);
                 LinearLayoutManager linearlayout = new LinearLayoutManager(getApplicationContext());
                 linearlayout.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearlayout);
                 recyclerView.setAdapter(gatewayAdapter);
 
-
             }
+        });
+        SearchinRecycle normal = new SearchinRecycle(privatedata.getJsonurl(),"");
+        jsonTask.execute(normal);
+        enterbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createprogressdialog(500);
+                String val = entervalue.getText().toString().trim();
+                SearchinRecycle searchkeyword = new SearchinRecycle(privatedata.getJsonurl(),val);
+                JsonTask jsonTask =new JsonTask(new AsyncResponse(){
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void processFinish(List<Applicable> output) {
+                        List<Applicable> temp = new ArrayList<>();
+                        temp.addAll(output);
+                        gatewayAdapter = new GatewayAdapter(getApplicationContext(),temp);
+                        recyclerView.setAdapter(gatewayAdapter);
+                        gatewayAdapter.notifyDataSetChanged();
 
-            super.onPostExecute(value);
-            if (pd.isShowing()) {
-                pd.dismiss();
+                    }
+                });
+                jsonTask.execute(searchkeyword);
+                //Toast.makeText(MainActivity.this, "Find Button Entered", Toast.LENGTH_SHORT).show();
             }
+        });
 
+    }
 
+    private void initialize()
+    {
+        recyclerView = findViewById(R.id.recycleview);
+        entervalue = findViewById(R.id.Gatewaynameedittext);
+        enterbutton = findViewById(R.id.enter);
+        privatedata = new Privatedata();
+        listdata = new ArrayList<>();
+        pd = new ProgressDialog(getApplicationContext());
+    }
 
-        }
+    private void createprogressdialog(int timer)
+    {
+        pd= ProgressDialog.show(this,"Doing something", "Please wait....",true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(timer);
+                    pd.dismiss();
+                }
+                catch(InterruptedException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 

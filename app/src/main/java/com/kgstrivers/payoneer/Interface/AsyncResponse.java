@@ -1,4 +1,9 @@
 package com.kgstrivers.payoneer.Interface;
 
-public class AsyncResponse {
+import com.kgstrivers.payoneer.Models.Applicable;
+
+import java.util.List;
+
+public interface AsyncResponse {
+    void processFinish(List<Applicable> output);
 }
