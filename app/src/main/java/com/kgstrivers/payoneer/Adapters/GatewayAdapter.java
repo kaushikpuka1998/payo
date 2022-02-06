@@ -1,6 +1,8 @@
 package com.kgstrivers.payoneer.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kgstrivers.payoneer.Activities.SecondPageActivity;
 import com.kgstrivers.payoneer.Models.Applicable;
 import com.kgstrivers.payoneer.R;
 import com.squareup.picasso.Picasso;
@@ -24,39 +27,11 @@ import java.util.Locale;
 public class GatewayAdapter extends RecyclerView.Adapter<GatewayAdapter.MyViewHolder> {
 
     Context context;
-    List<Applicable> listapplicable,emptyapplicable,wholeapplicable;
+    List<Applicable> listapplicable;
     public GatewayAdapter(Context contxt,List<Applicable> applicables)
     {
         context = contxt;
         this.listapplicable = applicables;
-        wholeapplicable = listapplicable;
-    }
-    public void Search(String value)
-    {
-        emptyapplicable = new ArrayList<>();
-        if(value.length() == 0)
-        {
-            Log.d("CHECKING:","Length 0 entered");
-            listapplicable.clear();
-            listapplicable.addAll(wholeapplicable);
-            notifyDataSetChanged();
-        }else
-        {
-            Log.d("CHECKING:",""+listapplicable.size());
-            for(int i=0;i<listapplicable.size();i++)
-            {
-                Log.d("CHECKING:",listapplicable.get(i).getCode().toLowerCase());
-                if(listapplicable.get(i).getCode().toLowerCase() == value)
-                {
-                    emptyapplicable.add(listapplicable.get(i));
-
-                }
-            }
-            listapplicable.clear();
-            listapplicable=emptyapplicable;
-            notifyDataSetChanged();
-        }
-
     }
     @NonNull
     @Override
@@ -67,11 +42,22 @@ public class GatewayAdapter extends RecyclerView.Adapter<GatewayAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GatewayAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GatewayAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
 
         holder.gatewayname.setText(listapplicable.get(position).getLabel());
         Picasso.get().load(listapplicable.get(position).getLinks().getLogo()).into(holder.imageview);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context,SecondPageActivity.class);
+                i.putExtra("Applicable",listapplicable.get(position));
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+
+            }
+        });
     }
 
     @Override

@@ -1,10 +1,13 @@
 package com.kgstrivers.payoneer.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Applicable {
+public class Applicable implements Parcelable {
 
     @SerializedName("code")
     @Expose
@@ -42,6 +45,32 @@ public class Applicable {
     @SerializedName("contractData")
     @Expose
     private ContractData contractData;
+
+    protected Applicable(Parcel in) {
+        code = in.readString();
+        label = in.readString();
+        method = in.readString();
+        grouping = in.readString();
+        registration = in.readString();
+        recurrence = in.readString();
+        byte tmpRedirect = in.readByte();
+        redirect = tmpRedirect == 0 ? null : tmpRedirect == 1;
+        byte tmpSelected = in.readByte();
+        selected = tmpSelected == 0 ? null : tmpSelected == 1;
+        operationType = in.readString();
+    }
+
+    public static final Creator<Applicable> CREATOR = new Creator<Applicable>() {
+        @Override
+        public Applicable createFromParcel(Parcel in) {
+            return new Applicable(in);
+        }
+
+        @Override
+        public Applicable[] newArray(int size) {
+            return new Applicable[size];
+        }
+    };
 
     public String getCode() {
         return code;
@@ -139,4 +168,21 @@ public class Applicable {
         this.contractData = contractData;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(code);
+        parcel.writeString(label);
+        parcel.writeString(method);
+        parcel.writeString(grouping);
+        parcel.writeString(registration);
+        parcel.writeString(recurrence);
+        parcel.writeByte((byte) (redirect == null ? 0 : redirect ? 1 : 2));
+        parcel.writeByte((byte) (selected == null ? 0 : selected ? 1 : 2));
+        parcel.writeString(operationType);
+    }
 }
