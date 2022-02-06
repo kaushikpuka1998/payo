@@ -45,12 +45,7 @@ public class MainActivity extends AppCompatActivity{
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(List<Applicable> applicables) {
-                gatewayAdapter = new GatewayAdapter(getApplicationContext(),applicables);
-                LinearLayoutManager linearlayout = new LinearLayoutManager(getApplicationContext());
-                linearlayout.setOrientation(LinearLayoutManager.VERTICAL);
-                recyclerView.setLayoutManager(linearlayout);
-                recyclerView.setAdapter(gatewayAdapter);
-                gatewayAdapter.notifyDataSetChanged();
+                recyclerviewinit(applicables);
             }
         });
         enterbutton.setOnClickListener(new View.OnClickListener() {
@@ -59,18 +54,11 @@ public class MainActivity extends AppCompatActivity{
                 createprogressdialog(500);
                 String val = entervalue.getText().toString().trim();
                 firstpageViewModel.searchApplicable(val).observe(MainActivity.this, new Observer<List<Applicable>>() {
-                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onChanged(List<Applicable> applicables) {
-                        gatewayAdapter = new GatewayAdapter(getApplicationContext(),applicables);
-                        LinearLayoutManager linearlayout = new LinearLayoutManager(getApplicationContext());
-                        linearlayout.setOrientation(LinearLayoutManager.VERTICAL);
-                        recyclerView.setLayoutManager(linearlayout);
-                        recyclerView.setAdapter(gatewayAdapter);
-                        gatewayAdapter.notifyDataSetChanged();
+                        recyclerviewinit(applicables);
                     }
                 });
-
                 //Toast.makeText(MainActivity.this, "Find Button Entered", Toast.LENGTH_SHORT).show();
             }
         });
@@ -102,6 +90,17 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         }).start();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void recyclerviewinit(List<Applicable>applicables)
+    {
+        gatewayAdapter = new GatewayAdapter(getApplicationContext(),applicables);
+        LinearLayoutManager linearlayout = new LinearLayoutManager(getApplicationContext());
+        linearlayout.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearlayout);
+        recyclerView.setAdapter(gatewayAdapter);
+        gatewayAdapter.notifyDataSetChanged();
     }
 
 
