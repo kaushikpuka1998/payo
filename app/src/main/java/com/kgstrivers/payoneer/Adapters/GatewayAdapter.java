@@ -3,26 +3,18 @@ package com.kgstrivers.payoneer.Adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.kgstrivers.payoneer.Activities.SecondPageActivity;
 import com.kgstrivers.payoneer.Models.Applicable;
 import com.kgstrivers.payoneer.R;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GatewayAdapter extends RecyclerView.Adapter<GatewayAdapter.MyViewHolder> {
 

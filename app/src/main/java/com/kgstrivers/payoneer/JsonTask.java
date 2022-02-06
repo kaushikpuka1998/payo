@@ -1,20 +1,10 @@
 package com.kgstrivers.payoneer;
-
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.gson.Gson;
-import com.kgstrivers.payoneer.Activities.MainActivity;
-import com.kgstrivers.payoneer.Adapters.GatewayAdapter;
 import com.kgstrivers.payoneer.Interface.AsyncResponse;
 import com.kgstrivers.payoneer.Models.Applicable;
 import com.kgstrivers.payoneer.Models.Networks;
-import com.kgstrivers.payoneer.Models.SearchinRecycle;
 import com.kgstrivers.payoneer.Models.WholeModel;
 
 import java.io.BufferedReader;
@@ -27,24 +17,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonTask extends AsyncTask<SearchinRecycle, String, String> {
+public class JsonTask extends AsyncTask<String, String, String> {
     public AsyncResponse delegate;
     public String searchvalue;
-    public Context context;
 
     public JsonTask(AsyncResponse asyncResponse)
     {
         this.delegate = asyncResponse;
     }
 
-    public String doInBackground(SearchinRecycle... params) {
+    protected String doInBackground(String... params) {
 
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
         try {
-            URL url = new URL(params[0].getUrl());
-            searchvalue = params[0].getSearchkeywords();
+            URL url = new URL(params[0]);
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
@@ -85,7 +73,7 @@ public class JsonTask extends AsyncTask<SearchinRecycle, String, String> {
     }
 
     @Override
-    public void onPostExecute(String value) {
+    protected void onPostExecute(String value) {
         List<Applicable> applicables = null;
         List<Applicable> searchcontent = new ArrayList<>();
         if(value!=null)
@@ -99,25 +87,14 @@ public class JsonTask extends AsyncTask<SearchinRecycle, String, String> {
 
                 for(int i=0;i<applicables.size();i++)
                 {
-                    if(applicables.get(i).getCode().toLowerCase().equals(searchvalue))
-                    {
+
                         Log.d("Searched Value:",applicables.get(i).getLabel());
                         searchcontent.add(applicables.get(i));
-                    }
-                    Log.d("Value:",applicables.get(i).getLabel());
+
                 }
             }
-
-
-
-
         }
-        delegate.processFinish(searchvalue.length() == 0?applicables:searchcontent);
+        delegate.processFinish(searchcontent);
         super.onPostExecute(value);
-
     }
-
-
-
-
 }
