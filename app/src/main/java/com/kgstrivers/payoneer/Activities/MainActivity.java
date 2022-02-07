@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
 
-                String val = entervalue.getText().toString().trim();
+                String val = entervalue.getText().toString().trim().toLowerCase();
 
                 if(val.length() == 0)
                 {

@@ -5,6 +5,15 @@
       <map>
         <entry key="app/src/main/res/drawable/button.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/cross.xml" value="0.205" />
+        <entry key="app/src/main/res/layout-hdpi/activity_main.xml" value="0.5458333333333333" />
+        <entry key="app/src/main/res/layout-large/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout-ldpi/activity_main.xml" value="2.153125" />
+        <entry key="app/src/main/res/layout-mdpi/activity_main.xml" value="0.5625" />
+        <entry key="app/src/main/res/layout-small/activity_main.xml" value="1.3392857142857142" />
+        <entry key="app/src/main/res/layout-xhdpi/activity_main.xml" value="0.48" />
+        <entry key="app/src/main/res/layout-xlarge/activity_main.xml" value="0.159765625" />
+        <entry key="app/src/main/res/layout-xxhdpi/activity_main.xml" value="0.35885416666666664" />
+        <entry key="app/src/main/res/layout-xxxhdpi/activity_main.xml" value="0.21302083333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_second_page.xml" value="0.19831223628691982" />
         <entry key="app/src/main/res/layout/button.xml" value="0.1828125" />

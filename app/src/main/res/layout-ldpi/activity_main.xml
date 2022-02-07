@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/Gatewaynameedittext"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:ems="10"
+            android:hint="Please Enter the Gateway"
+            android:inputType="textPersonName"
+            android:padding="12dp" />
+        <Button
+            android:id="@+id/cross"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/cross"
+            android:layout_marginLeft="270dp"
+            android:layout_marginTop="25dp"
+            />
+
+    </FrameLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="130dp" />
+
+    <Button
+        android:id="@+id/enter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:background="@drawable/button"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:text="Find" />
+
+</RelativeLayout>
+
