@@ -45,6 +45,7 @@ public class GatewayAdapter extends RecyclerView.Adapter<GatewayAdapter.MyViewHo
             public void onClick(View view) {
                 Intent i = new Intent(context,SecondPageActivity.class);
                 i.putExtra("Applicable",listapplicable.get(position));
+                i.putExtra("id",position);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
 
