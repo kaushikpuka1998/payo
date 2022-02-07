@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity{
     ProgressDialog pd;
     RecyclerView recyclerView;
     GatewayAdapter gatewayAdapter;
-    Button enterbutton;
+    Button enterbutton,crossbutton;
     EditText entervalue;
     Privatedata privatedata;
     List<Applicable> listdata;
@@ -51,17 +51,44 @@ public class MainActivity extends AppCompatActivity{
         enterbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createprogressdialog(500);
+
                 String val = entervalue.getText().toString().trim();
-                firstpageViewModel.searchApplicable(val).observe(MainActivity.this, new Observer<List<Applicable>>() {
+
+                if(val.length() == 0)
+                {
+                    crossbutton.setVisibility(View.INVISIBLE);
+                    entervalue.setError("Please Enter Gateway Name");
+                }else
+                {
+                    createprogressdialog(500);
+                    crossbutton.setVisibility(View.VISIBLE);
+                    firstpageViewModel.searchApplicable(val).observe(MainActivity.this, new Observer<List<Applicable>>() {
+                        @Override
+                        public void onChanged(List<Applicable> applicables) {
+                            recyclerviewinit(applicables);
+                        }
+                    });
+                }
+
+                //Toast.makeText(MainActivity.this, "Find Button Entered", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        crossbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                entervalue.setText("");
+                createprogressdialog(500);
+                firstpageViewModel.searchApplicable("").observe(MainActivity.this, new Observer<List<Applicable>>() {
                     @Override
                     public void onChanged(List<Applicable> applicables) {
                         recyclerviewinit(applicables);
                     }
                 });
-                //Toast.makeText(MainActivity.this, "Find Button Entered", Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
     }
 
@@ -73,6 +100,7 @@ public class MainActivity extends AppCompatActivity{
         privatedata = new Privatedata();
         listdata = new ArrayList<>();
         pd = new ProgressDialog(getApplicationContext());
+        crossbutton = findViewById(R.id.cross);
     }
 
     private void createprogressdialog(int timer)

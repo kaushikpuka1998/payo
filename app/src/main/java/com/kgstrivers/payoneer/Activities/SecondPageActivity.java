@@ -62,7 +62,7 @@ public class SecondPageActivity extends AppCompatActivity {
             enableandsethint(et2,Inputelemets[6],Inputelemetstype[6]);
             enableandsethint(et3,Inputelemets[5],Inputelemetstype[5]);
         }
-        Toast.makeText(this,applicable.getLabel()+id , Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Choosed "+applicable.getLabel() , Toast.LENGTH_SHORT).show();
 
 
     }
