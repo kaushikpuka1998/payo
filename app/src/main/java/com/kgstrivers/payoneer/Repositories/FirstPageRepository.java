@@ -42,16 +42,23 @@ public class FirstPageRepository {
     {
         MutableLiveData<List<Applicable>> data = new MutableLiveData<>();
         List<Applicable> searchedvalue=new ArrayList<>();
-        for(int i=0;i<dataset.size();i++)
+        if(value.equals(""))
         {
-            //Log.d("Value Done ",dataset.get(i).getCode().toLowerCase());
-            if(dataset.get(i).getCode().toLowerCase().equals(value))
+            searchedvalue = dataset;
+        }else
+        {
+            for(int i=0;i<dataset.size();i++)
             {
-
                 //Log.d("Value Done ",dataset.get(i).getCode().toLowerCase());
-                searchedvalue.add(dataset.get(i));
+                if(dataset.get(i).getCode().toLowerCase().equals(value))
+                {
+
+                    Log.d("Value Done ",dataset.get(i).getCode().toLowerCase());
+                    searchedvalue.add(dataset.get(i));
+                }
             }
         }
+
         data.postValue(searchedvalue);
         Log.d("Searching Working: ","Yes");
 
